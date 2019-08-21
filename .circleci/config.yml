@@ -9,9 +9,9 @@ jobs:
       - setup_remote_docker
 
       - run: |
-          docker build -t bbensky/delicate-flowers:$CIRCLE_SHA1 .
+          docker build -t quay.io/bbensky/delicate-flowers:$CIRCLE_SHA1 .
           docker login -u $QUAY_USER -p $QUAY_TOKEN quay.io
-          docker push bbensky/delicate-flowers:$CIRCLE_SHA1
+          docker push quay.io/bbensky/delicate-flowers:$CIRCLE_SHA1
 
 workflows:
   version: 2
