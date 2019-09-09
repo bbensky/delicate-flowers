@@ -19,19 +19,39 @@ references:
         docker-pull -f deploy/production.config
         docker-build -f deploy/production.config
 
+  deploy_to_kube: &deploy_to_kube
+    run:
+      name: Deploy to Production
+      command: |
+        docker-push -f deploy/production.config
+
 jobs:
   build_image:
     docker:
       - image: quay.io/reactiveops/ci-images:v9.3-stretch
-
     steps:
       - checkout
       - setup_remote_docker
       - *set_environment_variables
       - *build_image
+  deploy:
+    docker:
+      - image: quay.io/reactiveops/ci-images:v9.3-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *set_environment_variables
+      - *build_image
+      - *deploy_to_kube
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build_image
+      - deploy:
+          requires:
+            - build_image
+          filters:
+            branches:
+              only: master
