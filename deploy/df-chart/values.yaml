@@ -4,7 +4,7 @@
 
 image:
   repository: quay.io/bbensky/delicate-flowers
-  tag: 7ed2b154e7927c2ede7c9d15833847946f95802d
+  tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

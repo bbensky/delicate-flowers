@@ -18,12 +18,14 @@ references:
         docker login quay.io -u="${QUAY_USER}" -p="${QUAY_TOKEN}"
         docker-pull -f deploy/production.config
         docker-build -f deploy/production.config
+        docker-push -f deploy/production.config
 
   deploy_to_kube: &deploy_to_kube
     run:
       name: Deploy to Production
       command: |
-        docker-push -f deploy/production.config
+        prepare-kubectl  
+        helm-deploy -f deploy/production.config
 
 jobs:
   build_image:
@@ -41,7 +43,6 @@ jobs:
       - checkout
       - setup_remote_docker
       - *set_environment_variables
-      - *build_image
       - *deploy_to_kube
 
 workflows:
